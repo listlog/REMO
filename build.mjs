@@ -7,7 +7,7 @@ const output = path.join(root, 'dist');
 const publicFiles = [
   'index.html', 'about.html', 'team.html', 'projects.html', 'contact.html',
   'terms.html', 'privacy.html', 'project-1.html', 'project-2.html', 'project-3.html',
-  'styles.css', 'app.js', 'content.js'
+  'styles.css', 'app.js', 'content.js', 'board.html', 'board.css', 'board.js'
 ];
 await mkdir(output, { recursive: true });
 // Fail closed if unexpected files are present; never publish server code or secrets.

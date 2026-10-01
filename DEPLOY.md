@@ -16,3 +16,5 @@ vercel.json의 설정을 사용합니다. 코드의 api/content.js도 함께 올
 dist는 HTML/CSS/JS만 포함하며 서버 코드, SQL, 환경 파일, 문서는 공개 정적 결과물에서 제외합니다.
 
 배포 후 /api/content에서 200 응답과 members/projects/pages 배열을 확인하고 홈, 팀원 소개, 프로젝트 필터와 상세 페이지를 점검합니다. DB가 미설정이거나 조회에 실패하면 503을 반환하고 홈페이지에 재시도 안내를 표시합니다.
+
+게시판 추가: board-schema.sql로 테이블을 준비하고, board-server.mjs 및 api/board.js, api/admin.js를 함께 배포합니다. 게시판 비밀번호는 REMO_ADMIN_PASSWORD 서버 환경변수에만 설정합니다. 12~256자의 비밀번호를 직접 입력·저장하고 재배포해야 관리자 로그인이 활성화됩니다. Preview는 테스트 전용 비밀번호를 별도로 설정할 수 있습니다.

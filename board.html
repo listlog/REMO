@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="REMO 팀의 공지와 프로젝트 소식을 전하는 게시판">
+  <title>게시판 — REMO</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%230052ed'/%3E%3Ctext x='20' y='29' text-anchor='middle' font-family='Arial' font-size='28' font-weight='700' fill='white'%3ER%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="board.css">
+  <script src="board.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="wordmark" href="index.html" aria-label="REMO 홈">REMO</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav"><span>메뉴</span><span class="menu-icon" aria-hidden="true"></span></button>
+      <nav id="main-nav" class="main-nav" aria-label="주요 메뉴">
+        <a href="index.html">홈</a>
+        <a href="about.html">팀 소개</a>
+        <a href="team.html">팀원 소개</a>
+        <a href="projects.html">프로젝트</a>
+        <a href="board.html" aria-current="page">게시판</a>
+        <a href="contact.html">문의</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="container inner-main board-main" tabindex="-1">
+    <div class="board-heading"><div><p class="board-eyebrow">REMO BOARD</p><h1>우리의 소식</h1><p>팀의 이야기와 프로젝트 소식을 전합니다.</p></div><div class="board-actions"><button id="login-open" class="text-link" type="button">관리자 로그인</button><button id="archive-toggle" class="text-link" type="button" data-admin hidden>휴지통</button><button id="logout" class="text-link" type="button" data-admin hidden>로그아웃</button><button id="write-open" class="button button-primary" type="button" data-admin hidden>글쓰기 ＋</button></div></div>
+    <noscript>게시판을 이용하려면 브라우저에서 JavaScript를 켜 주세요.</noscript>
+    <p id="board-message" class="board-message" role="status" aria-live="polite"></p>
+    <section id="board-list-view">
+      <div class="board-toolbar"><h2 id="list-heading">전체 소식</h2><form id="search-form" class="board-search" role="search"><label class="visually-hidden" for="board-search">게시글 검색</label><input id="board-search" type="search" maxlength="100" placeholder="제목 또는 내용 검색"><button class="button" type="submit">검색</button></form></div>
+      <ul id="board-list" class="board-list" aria-label="게시글 목록" aria-busy="true"></ul>
+      <div id="board-empty" class="board-empty" hidden><div class="board-empty-symbol" aria-hidden="true">≡</div><h3 id="empty-title">아직 등록된 소식이 없어요.</h3><p id="empty-copy">REMO의 새로운 이야기가 이곳에 모입니다.</p></div>
+      <div class="board-pagination"><button id="load-more" class="button button-neutral" type="button" hidden>소식 더 보기</button><button id="retry-list" class="button button-outline" type="button" hidden>다시 불러오기</button></div>
+    </section>
+    <article id="board-detail" class="board-detail" hidden>
+      <div class="post-heading"><span id="post-category" class="board-badge"></span><h2 id="post-title"></h2><p class="post-meta">REMO <span aria-hidden="true">·</span> <span id="post-date"></span></p></div>
+      <div id="post-content" class="post-content"></div>
+      <div class="post-footer"><a href="board.html" class="button button-neutral">← 목록으로</a><div class="board-actions"><button id="edit-post" class="button button-outline" type="button" hidden>수정</button><button id="delete-post" class="button button-danger" type="button" hidden>삭제</button></div></div>
+    </article>
+    <section id="board-editor" class="board-editor" hidden><h2 id="editor-heading">새 소식 작성</h2>
+      <form id="post-form" class="board-form"><label for="write-category">분류<select id="write-category"><option value="news">팀 소식</option><option value="notice">공지</option><option value="project">프로젝트</option></select></label><label for="write-title">제목<input id="write-title" required maxlength="120" placeholder="제목을 입력해 주세요"><small>최대 120자</small></label><label for="write-content">내용<textarea id="write-content" required maxlength="20000" rows="12" placeholder="공유하고 싶은 소식을 작성해 주세요"></textarea><small>최대 20,000자 · 게시하면 홈페이지 방문자 모두에게 공개됩니다.</small></label><div class="board-actions"><button id="save-post" class="button button-primary" type="submit">게시글 저장</button><button id="editor-cancel" class="button button-neutral" type="button">취소</button></div></form>
+    </section>
+    <dialog id="login-dialog" class="board-dialog" aria-labelledby="login-heading"><h2 id="login-heading">관리자 로그인</h2><p>REMO 팀 관리자만 소식을 작성할 수 있어요.</p><form id="login-form" class="board-form"><label for="admin-password">관리자 비밀번호<input id="admin-password" type="password" autocomplete="current-password" required maxlength="256"></label><p id="login-error" class="board-message" role="alert"></p><div class="board-actions"><button id="login-submit" class="button button-primary" type="submit">로그인</button><button id="login-close" class="button button-neutral" type="button">닫기</button></div></form></dialog>
+    <dialog id="delete-dialog" class="board-dialog" aria-labelledby="delete-heading"><h2 id="delete-heading">게시글을 삭제할까요?</h2><p>목록에서 숨겨집니다. 관리자 휴지통에서 다시 복원할 수 있어요.</p><div class="board-actions" style="margin-top:24px"><button id="delete-confirm" class="button button-danger" type="button">휴지통으로 이동</button><button id="delete-cancel" class="button button-neutral" type="button">취소</button></div></dialog>
+
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><a class="wordmark" href="index.html" aria-label="REMO 홈">REMO</a><span>© REMO</span></div>
+      <nav class="policy-nav" aria-label="정책 안내"><a href="terms.html">이용약관</a><span aria-hidden="true"></span><a class="privacy-link" href="privacy.html">개인정보처리방침</a></nav>
+    </div>
+  </footer>
+</body>
+</html>

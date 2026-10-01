@@ -12,6 +12,6 @@ test('missing credentials return a generic uncached error',async()=>{
  finally{if(previous!==undefined)process.env.DATABASE_URL=previous;}
 });
 test('published output contains only intended public files',async()=>{
- const files=await readdir(new URL('./dist/',import.meta.url));assert.equal(files.length,13);
- for(const file of files){assert.match(file,/^(index|about|team|projects|contact|terms|privacy|project-[123])\.html$|^(styles\.css|app\.js|content\.js)$/);assert.deepEqual(await readFile(new URL('./dist/'+file,import.meta.url)),await readFile(new URL('./'+file,import.meta.url)));}
+ const files=await readdir(new URL('./dist/',import.meta.url));assert.equal(files.length,16);
+ for(const file of files){assert.match(file,/^(index|about|team|projects|contact|board|terms|privacy|project-[123])\.html$|^(styles\.css|app\.js|content\.js|board\.js|board\.css)$/);assert.deepEqual(await readFile(new URL('./dist/'+file,import.meta.url)),await readFile(new URL('./'+file,import.meta.url)));}
 });
