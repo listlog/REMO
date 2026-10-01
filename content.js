@@ -14,7 +14,8 @@
     if (url.protocol !== 'https:' && !(url.origin === location.origin && url.protocol === 'http:')) return;
     const img = document.createElement('img');
     img.alt = alt || 'REMO 이미지';
-    img.loading = 'lazy';
+    // Load before attaching so a detached lazy image cannot stall forever.
+    img.loading = 'eager';
     img.referrerPolicy = 'no-referrer';
     img.addEventListener('load', () => {
       node.replaceChildren(img);
