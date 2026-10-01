@@ -8,7 +8,7 @@
   "scripts": {
     "build": "node build.mjs",
     "db:check": "node --env-file-if-exists=.env.local check-db.mjs",
-    "test": "node build.mjs && node --test verify-content.test.mjs"
+    "test": "node build.mjs && node --test verify-content.test.mjs verify-board.test.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "1.1.0"
