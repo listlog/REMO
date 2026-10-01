@@ -1,0 +1,10 @@
+.vercel/
+node_modules/
+dist/
+.pnpm-store/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.log

@@ -8,6 +8,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%230052ed'/%3E%3Ctext x='20' y='29' text-anchor='middle' font-family='Arial' font-size='28' font-weight='700' fill='white'%3ER%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
+  <script src="content.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문 바로가기</a>
@@ -25,9 +26,9 @@
     </div>
   </header>
   <main id="main" class="container inner-main" tabindex="-1">
-    <div class="page-intro"><h1>문의</h1><div class="content-space intro-copy" aria-label="페이지 소개 작성 공간"></div></div><section class="contact-layout" aria-label="팀 연락처">
-<div class="contact-information"><section><h2>대표 이메일</h2><div class="content-space contact-value" aria-label="대표 이메일 작성 공간"></div></section><section><h2>공식 채널</h2><div class="content-space contact-value" aria-label="공식 채널 링크 작성 공간"></div></section></div>
-<div class="image-placeholder contact-image" role="img" aria-label="팀 또는 공간 이미지 삽입 공간"><span>팀 또는 공간 이미지</span><small>팀 활동 사진 또는 작업 공간</small></div>
+    <div class="page-intro"><h1>문의</h1><div class="content-space intro-copy" aria-label="페이지 소개 작성 공간" data-content-slot="slot-01"></div></div><section class="contact-layout" aria-label="팀 연락처">
+<div class="contact-information"><section><h2>대표 이메일</h2><div class="content-space contact-value" aria-label="대표 이메일 작성 공간" data-content-slot="slot-02"></div></section><section><h2>공식 채널</h2><div class="content-space contact-value" aria-label="공식 채널 링크 작성 공간" data-content-slot="slot-03"></div></section></div>
+<div class="image-placeholder contact-image" role="img" aria-label="팀 또는 공간 이미지 삽입 공간" data-content-slot="slot-04"><span>팀 또는 공간 이미지</span><small>팀 활동 사진 또는 작업 공간</small></div>
 </section>
   </main>
   <footer class="site-footer">
