@@ -26,7 +26,7 @@ filters.forEach((button) => {
     filters.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
     let count = 0;
     projects.forEach((project) => {
-      const show = button.dataset.filter === "all" || project.dataset.status === button.dataset.filter;
+      const show = project.dataset.published !== "false" && (button.dataset.filter === "all" || project.dataset.status === button.dataset.filter);
       project.hidden = !show;
       if (show) count += 1;
     });

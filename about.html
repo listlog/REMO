@@ -8,6 +8,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%230052ed'/%3E%3Ctext x='20' y='29' text-anchor='middle' font-family='Arial' font-size='28' font-weight='700' fill='white'%3ER%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
+  <script src="content.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문 바로가기</a>
@@ -25,10 +26,10 @@
     </div>
   </header>
   <main id="main" class="container inner-main" tabindex="-1">
-    <div class="page-intro"><h1>팀 소개</h1><div class="content-space intro-copy" aria-label="페이지 소개 작성 공간"></div></div>
-<section class="about-hero" aria-label="REMO 소개"><div class="image-placeholder about-image" role="img" aria-label="팀 활동 이미지 삽입 공간"><span>팀 활동 이미지</span><small>단체 사진 또는 협업하는 모습</small></div><div class="content-space about-copy" aria-label="팀 결성 배경과 소개 작성 공간"></div></section>
+    <div class="page-intro"><h1>팀 소개</h1><div class="content-space intro-copy" aria-label="페이지 소개 작성 공간" data-content-slot="slot-01"></div></div>
+<section class="about-hero" aria-label="REMO 소개"><div class="image-placeholder about-image" role="img" aria-label="팀 활동 이미지 삽입 공간" data-content-slot="slot-02"><span>팀 활동 이미지</span><small>단체 사진 또는 협업하는 모습</small></div><div class="content-space about-copy" aria-label="팀 결성 배경과 소개 작성 공간" data-content-slot="slot-03"></div></section>
 <section class="about-sections" aria-label="팀의 방향">
-<section><h2>비전과 목표</h2><div class="content-space about-description" aria-label="비전과 목표 작성 공간"></div></section><section><h2>주요 역량</h2><div class="content-space about-description" aria-label="주요 역량 작성 공간"></div></section><section><h2>협업 방식</h2><div class="content-space about-description" aria-label="협업 방식 작성 공간"></div></section>
+<section><h2>비전과 목표</h2><div class="content-space about-description" aria-label="비전과 목표 작성 공간" data-content-slot="slot-04"></div></section><section><h2>주요 역량</h2><div class="content-space about-description" aria-label="주요 역량 작성 공간" data-content-slot="slot-05"></div></section><section><h2>협업 방식</h2><div class="content-space about-description" aria-label="협업 방식 작성 공간" data-content-slot="slot-06"></div></section>
 </section>
   </main>
   <footer class="site-footer">

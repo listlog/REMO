@@ -1,0 +1,10 @@
+.git/
+.github/
+.gitignore
+README.md
+DEPLOY.md
+node_modules/
+dist/
+.pnpm-store/
+.env
+.env.*

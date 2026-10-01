@@ -1,27 +1,24 @@
 # REMO 홈페이지
-HTML · CSS · JavaScript로 만든 다중 페이지 시안입니다. 설치나 Node.js 서버 없이 index.html을 브라우저에서 열면 됩니다.
 
-GitHub 저장소는 https://github.com/listlog/REMO 를 사용합니다. Vercel 배포 설정은 vercel.json에 포함되어 있으며, 업로드와 연결 순서는 [DEPLOY.md](DEPLOY.md)를 참고하세요.
+HTML/CSS/JavaScript 화면과 Vercel Node.js 함수, Neon Postgres를 사용합니다.
+대상 프로젝트: remo-iw18 / https://remo-iw18.vercel.app
 
-## 페이지
-- index.html: 메인. 하단 팀원 사진 10개 영역을 제거했습니다.
-- about.html: 팀 소개
-- team.html: 팀원 10명. 프로젝트 이동 링크가 없습니다.
-- projects.html: 프로젝트 목록과 상태 필터
-- project-1.html ~ project-3.html: 프로젝트 소개 양식
-- contact.html: 대표 연락처와 공식 채널 공간
-- terms.html / privacy.html: 정책 연결 페이지. 확정 정책이 없어 준비 중 안내만 표시합니다.
+## 콘텐츠 수정
+Vercel → Storage → neon-teal-field → Data Editor에서 public 스키마를 선택합니다.
+- remo_members: 팀원 1~10의 name(이름), role(역할), skills(핵심 역량), public_contact(공개 연락처), image_url(사진 URL).
+- remo_projects: 프로젝트 1~3의 title(제목), period(기간), description(설명), participants(참여자), activities(수행 내용), process(과정), results(성과), image_url, status.
+- remo_page_content: page와 label로 위치를 확인하고 content(글) 또는 image_url을 입력합니다.
+- published가 true인 행만 홈페이지 API로 제공됩니다. false로 바꾸면 팀원과 프로젝트는 숨겨집니다. 일반 페이지의 비공개 글은 빈 공간으로 남습니다.
+- image_url에는 공개 HTTPS 이미지 주소를 입력하세요. 글은 HTML이 아닌 일반 텍스트로 표시됩니다.
 
-## 내용 입력
-각 HTML의 content-space 요소 안에 소개 글을 넣으세요. aria-label과 주석에 해당 공간의 용도가 적혀 있습니다.
-이미지 공간에는 짧은 안내가 표시됩니다. image-placeholder 요소를 실제 img 요소로 교체할 때 적절한 alt 설명을 작성하고 기존 영역의 크기/비율을 유지하세요.
-팀원별 이름·역할·핵심 역량·공개 연락처는 team.html의 각 member-card에 입력합니다.
-시안의 역할·성과·연락처는 임의로 채우지 않았습니다. 프로젝트의 세 상태는 레이아웃과 필터를 확인하기 위한 예시입니다.
-홈/목록/프로젝트 소개의 내용을 함께 갱신하세요.
-문의 페이지는 안내용이며 서버로 정보를 전송하는 기능이 없습니다.
+초기 데이터는 팀원 10명, 프로젝트 3개, 페이지 공간 23개이며 소개와 연락처는 비워 두었습니다. DB를 수정한 뒤 홈페이지를 새로고침하면 반영됩니다. 관리용 작성 기능은 Vercel/Neon의 로그인된 Data Editor를 사용합니다.
 
-## 디자인 및 동작
-styles.css에서 전체 색상, 간격, 모바일 배치를 조정합니다.
-app.js는 모바일 메뉴와 프로젝트 필터만 처리합니다.
-상단 메뉴, 약관·개인정보처리방침 링크, 프로젝트 이동은 HTML 링크로 작동합니다.
-외부 라이브러리·웹 폰트·분석 도구·쿠키를 추가하지 않았습니다.
+## 개발과 배포
+Node.js 24에서 패키지를 설치하고 npm run build로 공개 파일을 dist에 생성합니다.
+api/content.js는 공개 콘텐츠를 조회하는 GET 전용 함수이고, db.mjs는 서버 전용 연결입니다.
+DATABASE_URL은 Vercel의 Neon 연결로 공급하며 GitHub와 브라우저 코드에는 저장하지 않습니다.
+로컬 DB 점검은 .env.local에 접속 정보를 넣고 npm run db:check로 실행합니다.
+index.html을 직접 열어 정적 시안을 볼 수도 있지만 실제 DB 조회에는 Vercel 함수가 필요합니다.
+
+schema.sql은 초기 테이블/빈 행을 생성하며 기존 행은 덮어쓰지 않습니다. 배포 때 자동 실행하지 않습니다.
+약관과 개인정보처리방침은 아직 내용 준비 중입니다.
