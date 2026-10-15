@@ -8,7 +8,7 @@
   "scripts": {
     "build": "node build.mjs",
     "db:check": "node --env-file-if-exists=.env.local check-db.mjs",
-    "test": "node build.mjs && node --test verify-content.test.mjs verify-board.test.mjs verify-reservations.test.mjs verify-support.test.mjs"
+    "test": "node build.mjs && node --test verify-content.test.mjs verify-board.test.mjs verify-reservations.test.mjs verify-support.test.mjs verify-support-logs.test.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.95",

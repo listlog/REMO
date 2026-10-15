@@ -1,6 +1,7 @@
 import { getDb } from '../db.mjs';
 import { setupResponse, sameOrigin, jsonBody, isAdmin, digest } from '../board-server.mjs';
 import { CONSENT_VERSION, acceptingReservations, cronAuthorized, validateReservation, validToken, limitRequests, purgeExpired } from '../reservations-server.mjs';
+import {purgeSupportLogs} from '../support-logs.mjs';
 
 export function createHandler(database = getDb) {
   return async function handler(req, res) {
@@ -16,6 +17,7 @@ export function createHandler(database = getDb) {
       if (req.method === 'GET' && action === 'cleanup') {
         if (!cronAuthorized(req)) return res.status(401).json({error:'UNAUTHORIZED'});
         await purgeExpired(database());
+        await purgeSupportLogs(database());
         return res.status(200).json({ok:true});
       }
       if (req.method === 'GET' && action === 'status') {
