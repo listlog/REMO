@@ -3,5 +3,16 @@
   "framework": null,
   "buildCommand": "node build.mjs",
   "outputDirectory": "dist",
-  "cleanUrls": false
+  "cleanUrls": false,
+  "crons": [
+    {
+      "path": "/api/reservations?action=cleanup",
+      "schedule": "0 18 * * *"
+    }
+  ],
+  "functions": {
+    "api/support.js": {
+      "maxDuration": 60
+    }
+  }
 }

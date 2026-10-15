@@ -20,6 +20,7 @@
     img.addEventListener('load', () => {
       node.replaceChildren(img);
       node.classList.add('has-image');
+      node.classList.toggle('study-space-cover', url.origin === location.origin && url.pathname === '/study-space-hero.png');
       node.removeAttribute('role');
       node.removeAttribute('aria-label');
     }, { once: true });
@@ -80,7 +81,7 @@
           document.querySelectorAll('.metadata-value').forEach((node, i) => text(node, [project.period, project.participants][i]));
           document.querySelectorAll('.detail-copy').forEach((node, i) => text(node, [project.description, project.activities, project.process, project.results][i]));
         } else {
-          document.querySelectorAll('.detail-name,.detail-image,.project-meta,.detail-section,.detail-heading .status-badge').forEach(node => { node.hidden = true; });
+          document.querySelectorAll('.detail-name,.detail-image,.project-meta,.detail-section,.project-landing,.detail-heading .status-badge').forEach(node => { node.hidden = true; });
           text(document.querySelector('h1'), '공개된 프로젝트가 없습니다');
         }
       }

@@ -8,10 +8,13 @@
   "scripts": {
     "build": "node build.mjs",
     "db:check": "node --env-file-if-exists=.env.local check-db.mjs",
-    "test": "node build.mjs && node --test verify-content.test.mjs verify-board.test.mjs"
+    "test": "node build.mjs && node --test verify-content.test.mjs verify-board.test.mjs verify-reservations.test.mjs verify-support.test.mjs"
   },
   "dependencies": {
-    "@neondatabase/serverless": "1.1.0"
+    "@ai-sdk/google": "^4.0.95",
+    "@neondatabase/serverless": "1.1.0",
+    "ai": "^7.0.140"
   },
-  "type": "module"
+  "type": "module",
+  "packageManager": "pnpm@10.28.0"
 }

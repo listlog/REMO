@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="same-origin"><title>출시 알림 신청 관리 — REMO</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="board.css"><script src="reservations-admin.js" defer></script></head>
+<body><a class="skip-link" href="#main">본문 바로가기</a>
+<header class="site-header"><div class="container header-inner"><a class="wordmark" href="index.html">REMO</a><a href="board.html" class="text-link">게시판으로 돌아가기</a></div></header>
+<main id="main" class="container inner-main board-main">
+<div class="board-heading"><div><p class="board-eyebrow">STUDY SPACE</p><h1>출시 알림 신청 관리</h1><p>신청 이메일은 팀 관리자만 확인할 수 있어요.</p></div><button id="reservation-admin-logout" class="text-link" type="button" hidden>로그아웃</button></div>
+<p id="reservation-admin-message" class="board-message" role="status" aria-live="polite"></p>
+<section id="reservation-admin-login"><h2>관리자 로그인</h2><form id="reservation-admin-login-form" class="board-form"><label for="reservation-admin-password">기존 관리자 비밀번호<input id="reservation-admin-password" type="password" autocomplete="current-password" required maxlength="256"></label><button id="reservation-admin-login-submit" class="button button-primary" type="submit">로그인</button></form></section>
+<section id="reservation-admin-content" hidden><div class="board-toolbar"><h2>신청 목록</h2><button id="reservation-admin-refresh" type="button" class="button button-outline">새로고침</button></div><p>이 화면은 접수 관리용이며 이메일을 발송하지 않습니다. 알림을 별도로 발송한 뒤 해당 신청을 삭제해 주세요. 만료된 신청은 매일 정리됩니다.</p><ul id="reservation-admin-list" class="board-list" aria-label="출시 알림 신청 목록"></ul><p id="reservation-admin-empty" class="board-empty" hidden>접수된 신청이 없어요.</p><button id="reservation-admin-more" type="button" class="button button-neutral" hidden>더 보기</button></section>
+<dialog id="reservation-admin-delete-dialog" class="board-dialog" aria-labelledby="reservation-admin-delete-title"><h2 id="reservation-admin-delete-title">이 신청을 삭제할까요?</h2><p>이메일을 영구 삭제합니다. 알림을 발송했거나 신청자가 취소를 요청했을 때 삭제해 주세요.</p><p id="reservation-admin-delete-error" role="alert"></p><div class="board-actions"><button id="reservation-admin-delete-confirm" class="button button-danger" type="button">신청 삭제</button><button id="reservation-admin-delete-cancel" class="button button-neutral" type="button">닫기</button></div></dialog>
+<noscript>신청 관리를 이용하려면 JavaScript를 켜 주세요.</noscript>
+</main></body></html>
