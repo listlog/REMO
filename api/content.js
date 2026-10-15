@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const sql = getDb();
     const [members, projects, pages] = await sql.transaction([
       sql`SELECT id, name, role, skills, public_contact, image_url FROM public.remo_members WHERE published = true ORDER BY id`,
-      sql`SELECT id, title, period, description, participants, activities, process, results, image_url, status FROM public.remo_projects WHERE published = true ORDER BY id`,
+      sql`SELECT id, COALESCE(NULLIF(title, ''), CASE WHEN id = 1 THEN 'Study Space' ELSE '' END) AS title, period, description, participants, activities, process, results, COALESCE(NULLIF(image_url, ''), CASE WHEN id = 1 THEN '/study-space-hero.png' ELSE '' END) AS image_url, status FROM public.remo_projects WHERE published = true ORDER BY id`,
       sql`SELECT page, slot, content, image_url FROM public.remo_page_content WHERE published = true ORDER BY page, slot`
     ], { readOnly: true, isolationLevel: 'RepeatableRead' });
     return res.status(200).json({ members, projects, pages });
