@@ -12,6 +12,6 @@ test('missing credentials return a generic uncached error',async()=>{
  finally{if(previous!==undefined)process.env.DATABASE_URL=previous;}
 });
 test('published output contains only intended public files',async()=>{
- const files=await readdir(new URL('./dist/',import.meta.url));assert.equal(files.length,16);
- for(const file of files){assert.match(file,/^(index|about|team|projects|contact|board|terms|privacy|project-[123])\.html$|^(styles\.css|app\.js|content\.js|board\.js|board\.css)$/);assert.deepEqual(await readFile(new URL('./dist/'+file,import.meta.url)),await readFile(new URL('./'+file,import.meta.url)));}
+ const files=await readdir(new URL('./dist/',import.meta.url));assert.equal(files.length,31);
+ for(const file of files){if (!["support.js","support.css","reservations.js","reservations-admin.html","reservations-admin.js","study-space.html","study-space.css","study-space.js","study-space-hero.png","study-space-plan.png","study-space-learn.png","study-space-manage.png","study-space-review.png","study-space-hand.ttf","study-space-font-license.txt"].includes(file)) assert.match(file,/^(index|about|team|projects|contact|board|terms|privacy|project-[123])\.html$|^(styles\.css|app\.js|content\.js|board\.js|board\.css)$/);assert.deepEqual(await readFile(new URL('./dist/'+file,import.meta.url)),await readFile(new URL('./'+file,import.meta.url)));}
 });
