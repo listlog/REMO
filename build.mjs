@@ -7,7 +7,7 @@ const output = path.join(root, 'dist');
 const publicFiles = [
   'index.html', 'about.html', 'team.html', 'projects.html', 'contact.html',
   'terms.html', 'privacy.html', 'project-1.html', 'project-2.html', 'project-3.html',
-  'support.css', 'support.js', 'styles.css', 'app.js', 'content.js', 'board.html', 'board.css', 'board.js',
+  'support-admin.html', 'support-admin.css', 'support-admin.js', 'support.css', 'support.js', 'styles.css', 'app.js', 'content.js', 'board.html', 'board.css', 'board.js',
   'reservations.js', 'reservations-admin.html', 'reservations-admin.js', 'study-space.html', 'study-space.css', 'study-space.js', 'study-space-hero.png', 'study-space-plan.png', 'study-space-learn.png', 'study-space-manage.png', 'study-space-review.png', 'study-space-hand.ttf', 'study-space-font-license.txt'
 ];
 await mkdir(output, { recursive: true });

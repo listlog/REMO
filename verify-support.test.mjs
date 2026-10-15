@@ -1,13 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {createHandler} from './api/support.js';
+import {createHandler as createSupportHandler} from './api/support.js';
+import {LOG_CONSENT_VERSION} from './support-logs.mjs';
+import {randomUUID} from 'node:crypto';
+const createHandler=options=>createSupportHandler({prepare:async()=>{},record:async()=>{},...options});
 import {retrieve,validateAnswer,knowledge,UNKNOWN_ANSWER} from './support-rag.mjs';
 import {generateAnswer,supportConfigured} from './support-ai.mjs';
 import {validateMessages,containsSensitiveData,limitSupport} from './support-server.mjs';
 
 const response=()=>({headers:{},setHeader(k,v){this.headers[k]=v;},status(code){this.statusCode=code;return this;},json(body){this.body=body;return this;}});
-const req=(messages=[{role:'user',content:'가격이 얼마인가요?'}])=>({method:'POST',headers:{host:'remo.test',origin:'https://remo.test','content-type':'application/json'},body:{messages},socket:{remoteAddress:'127.0.0.1'}});
+const req=(messages=[{role:'user',content:'가격이 얼마인가요?'}])=>({method:'POST',headers:{host:'remo.test',origin:'https://remo.test','content-type':'application/json'},body:{messages,loggingConsent:true,consentVersion:LOG_CONSENT_VERSION,requestId:randomUUID()},socket:{remoteAddress:'127.0.0.1'}});
 async function configured(fn){const names=['REMO_ADMIN_PASSWORD','GEMINI_API_KEY','GEMINI_MODEL','VERCEL'];const old=Object.fromEntries(names.map(k=>[k,process.env[k]]));process.env.REMO_ADMIN_PASSWORD='support-test-only-password';process.env.GEMINI_API_KEY='test-only-non-working-key';process.env.GEMINI_MODEL='gemini-3.5-flash-lite';delete process.env.VERCEL;try{await fn();}finally{for(const [k,v]of Object.entries(old)){if(v===undefined)delete process.env[k];else process.env[k]=v;}}}
 const never=()=>{throw Error('No external call expected');};
 
@@ -37,11 +40,11 @@ test('API rejects cross-origin requests and invalid bodies before any provider o
  const r=req();r.method='DELETE';const s=response();await handler(r,s);assert.equal(s.statusCode,405);
 });
 test('configuration status is uncached and exposes no model credentials',async()=>configured(async()=>{
- const s=response();await createHandler({database:never,generate:never})({method:'GET'},s);assert.equal(s.statusCode,200);assert.equal(s.body.configured,true);assert.deepEqual(Object.keys(s.body).sort(),['configured','knowledge']);assert.equal(s.headers['Cache-Control'],'no-store');
+ const s=response();await createHandler({database:never,generate:never})({method:'GET'},s);assert.equal(s.statusCode,200);assert.equal(s.body.configured,true);assert.deepEqual(Object.keys(s.body).sort(),['configured','knowledge','logging']);assert.equal(s.headers['Cache-Control'],'no-store');
  delete process.env.GEMINI_API_KEY;assert.equal(supportConfigured(),false);const s2=response();await createHandler({database:never,generate:never})(req(),s2);assert.equal(s2.statusCode,503);
 }));
-test('unrelated and sensitive questions return useful notices without provider or DB calls',async()=>configured(async()=>{
- for(const [content,expected]of [['오늘 서울 날씨 알려줘',UNKNOWN_ANSWER],['my.name@example.com','개인정보']]){const s=response();await createHandler({database:never,generate:never})(req([{role:'user',content}]),s);assert.equal(s.statusCode,200);assert.equal(s.body.mode,'notice');assert.ok(s.body.answer.includes(expected));assert.deepEqual(s.body.sources,[]);}
+test('unrelated questions are logged without provider calls; sensitive inputs are not stored',async()=>configured(async()=>{
+ for(const [content,expected]of [['오늘 서울 날씨 알려줘',UNKNOWN_ANSWER],['my.name@example.com','개인정보']]){const s=response();await createHandler({database:()=>({}),limit:async()=>0,generate:never})(req([{role:'user',content}]),s);assert.equal(s.statusCode,200);assert.equal(s.body.mode,'notice');assert.ok(s.body.answer.includes(expected));assert.deepEqual(s.body.sources,[]);}
 }));
 test('support counters contain hashed namespaces, honor provider caps, and never touch reservations',async()=>configured(async()=>{
  const calls=[];const sql=(strings,...values)=>{calls.push({query:strings.join('?'),values});return Promise.resolve([{attempts:1}]);};

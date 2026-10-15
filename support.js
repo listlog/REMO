@@ -3,10 +3,12 @@
  const form=document.getElementById('support-form'),input=document.getElementById('support-question'),send=document.getElementById('support-send');
  const list=document.getElementById('support-messages'),status=document.getElementById('support-status'),notice=document.getElementById('support-notice');
  const reset=document.getElementById('support-reset'),reconnect=document.getElementById('support-reconnect'),count=document.getElementById('support-count');
+ const consent=document.getElementById('support-consent');
  const suggestions=[...document.querySelectorAll('[data-question]')],welcome=list.firstElementChild.cloneNode(true);
- let available=false,busy=false,history=[];
+ let available=false,busy=false,history=[],conversationToken=null,consentVersion='';
  const errors={SUPPORT_NOT_CONFIGURED:'상담 연결을 준비 중이에요. 잠시 후 다시 확인해 주세요.',TOO_MANY_REQUESTS:'이용 가능한 상담 횟수를 초과했어요. 잠시 후 다시 이용해 주세요.',PROVIDER_LIMIT:'현재 AI 서비스의 사용 한도에 도달했어요. 잠시 후 다시 시도해 주세요.',INVALID_INPUT:'질문을 1,200자 이내로 입력해 주세요.',SUPPORT_UNAVAILABLE:'답변을 가져오지 못했어요. 질문은 입력창에 남겨 두었으니 다시 전송해 주세요.'};
- function controls(){input.disabled=!available||busy;send.disabled=!available||busy||!input.value.trim();reset.disabled=busy||list.children.length<=1;suggestions.forEach(button=>{button.disabled=!available||busy;});form.setAttribute('aria-busy',String(busy));count.textContent=input.value.length.toLocaleString('ko-KR')+' / 1,200';}
+ errors.CONSENT_REQUIRED='대화 기록 보관 안내를 확인하고 동의해 주세요.';errors.INVALID_CONVERSATION='상담 세션이 만료됐어요. 새 대화를 눌러 다시 시작해 주세요.';
+ function controls(){input.disabled=!available||busy;consent.disabled=busy;send.disabled=!available||busy||!input.value.trim()||!consent.checked;reset.disabled=busy||list.children.length<=1;suggestions.forEach(button=>{button.disabled=!available||busy||!consent.checked;});form.setAttribute('aria-busy',String(busy));count.textContent=input.value.length.toLocaleString('ko-KR')+' / 1,200';}
  function showNotice(text=''){notice.textContent=text;notice.hidden=!text;}
  function scroll(){list.scrollTop=list.scrollHeight;}
  function addMessage(role,text,{sources=[],mode='generated',needsHuman=false}={}){
@@ -28,7 +30,8 @@
   available=false;reconnect.hidden=true;controls();status.textContent='상담 연결을 확인하고 있어요…';delete status.dataset.ready;showNotice();
   try{
    const response=await fetch('/api/support',{cache:'no-store',signal:AbortSignal.timeout(12000)}),data=await response.json();
-   if(!response.ok||!data.configured)throw Error('SUPPORT_NOT_CONFIGURED');
+   if(!response.ok||!data.configured||!data.logging?.consentVersion)throw Error('SUPPORT_NOT_CONFIGURED');
+   consentVersion=data.logging.consentVersion;
    available=true;status.textContent='AI 안내 · 질문을 보내 주세요';status.dataset.ready='true';
    document.getElementById('support-knowledge').textContent='참고 문서: '+data.knowledge.title+' · 반영일 '+data.knowledge.updatedAt;
   }catch{status.textContent='상담 연결을 준비 중이에요';showNotice(errors.SUPPORT_NOT_CONFIGURED);reconnect.hidden=false;}
@@ -36,14 +39,16 @@
  }
  async function submit(event){
   event.preventDefault();const question=input.value.trim();if(!available||busy||!question)return;
+  if(!consent.checked){showNotice(errors.CONSENT_REQUIRED);consent.focus();return;}
   if(question.length>1200){showNotice(errors.INVALID_INPUT);return;}
   busy=true;showNotice();controls();const user=addMessage('user',question),pending=addMessage('assistant','관련 안내 문서를 살펴보고 있어요');pending.classList.add('support-pending');
   try{
    const messages=[...history.slice(-6).map(message=>({...message,content:message.content.slice(0,1200)})),{role:'user',content:question}];
-   const response=await fetch('/api/support',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages}),signal:AbortSignal.timeout(35000)});
+   const response=await fetch('/api/support',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages,conversationToken,requestId:crypto.randomUUID(),loggingConsent:consent.checked,consentVersion}),signal:AbortSignal.timeout(35000)});
    const data=await response.json();if(!response.ok)throw Error(data.error||'SUPPORT_UNAVAILABLE');
    if(typeof data.answer!=='string'||!Array.isArray(data.sources))throw Error('SUPPORT_UNAVAILABLE');
    pending.remove();addMessage('assistant',data.answer,data);
+   if(typeof data.conversationToken==='string')conversationToken=data.conversationToken;
    // Sensitive-input notices are deliberately excluded from subsequent provider requests.
    if(data.mode!=='notice')history.push({role:'user',content:question},{role:'assistant',content:data.answer});
    history=history.slice(-6);input.value='';
@@ -51,8 +56,9 @@
   finally{busy=false;controls();input.focus();}
  }
  form.addEventListener('submit',submit);input.addEventListener('input',controls);
+ consent.addEventListener('change',controls);
  input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing&&event.keyCode!==229){event.preventDefault();form.requestSubmit();}});
  suggestions.forEach(button=>button.addEventListener('click',()=>{input.value=button.dataset.question;controls();form.requestSubmit();}));
- reset.addEventListener('click',()=>{history=[];input.value='';list.replaceChildren(welcome.cloneNode(true));showNotice();controls();input.focus();});
+ reset.addEventListener('click',()=>{history=[];conversationToken=null;input.value='';list.replaceChildren(welcome.cloneNode(true));showNotice('화면의 대화를 비웠어요. 이미 저장된 상담 기록은 30일간 보관돼요.');controls();input.focus();});
  reconnect.addEventListener('click',connect);connect();
 })();
